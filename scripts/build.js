@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 import fs from "node:fs/promises";
-import fs_sync from "node:fs";
-import { execSync } from "node:child_process";
 import * as common from './common.js';
 
 const platforms = {
@@ -35,33 +33,19 @@ async function undoManifestPatches(platform) {
     await fs.writeFile(common.main_manifest, text);
 }
 
-function run(cmd, options = {}) {
-    console.log(`> ${cmd}`);
-    execSync(cmd, { stdio: "inherit", ...options });
-}
-
-async function makeZip(output, directory) {
-    let cmd;
-    if (process.platform === "win32") { // use 7z
-        cmd = `7z a ${output} .`;
-    } else { // use zip
-        if (fs_sync.existsSync(output)) fs_sync.unlinkSync(output);
-        cmd = `zip -r ${output} .`;
-    }
-    if (cmd) run(cmd,{ cwd: directory });
-}
-
 async function makeReleaseFor(platform) {
     console.log(`\nMaking release for: ${platform}\n`);
 
     const output_file = common.joinWithReleasesQuoted(`${pkg.name} ${platform} v${pkg.version}.zip`);
 
-    await makeZip(output_file, common.SRC_DIR);
+    await common.makeZip(output_file, common.SRC_DIR);
 
     console.log(`\nFinished making release for: ${platform}\nAt: ${output_file}\n`);
 }
 
 await (async () => {
+    if (!common.checkZipExists()) return;
+
     await common.mkdir(common.RELEASES_DIR);
 
     console.log("\nMaking Release\n");

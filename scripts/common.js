@@ -3,6 +3,7 @@
 import path from "node:path";
 import fs_sync from "node:fs";
 import fs from "node:fs/promises";
+import { execSync } from "node:child_process";
 
 export const __dirname = process.cwd();
 
@@ -59,5 +60,38 @@ export async function mkdir(dir) {
         await fs.mkdir(dir, { recursive: true });
     } catch {
         // ignore if exists
+    }
+}
+
+export function run(cmd, options = {}) {
+    console.log(`> ${cmd}`);
+    return execSync(cmd, { stdio: "inherit", ...options });
+}
+
+export async function makeZip(output, directory) {
+    let cmd;
+    if (process.platform === "win32") { // use 7z
+        cmd = `7z a ${output} .`;
+    } else { // use zip
+        if (fs_sync.existsSync(output)) fs_sync.unlinkSync(output);
+        cmd = `zip -r ${output} .`;
+    }
+    run(cmd,{ cwd: directory });
+}
+
+export function checkZipExists() {
+    let cmd;
+    if (process.platform === "win32") { // use 7z
+        cmd = '7z --version';
+    } else { // use zip
+        cmd = 'zip --version';
+    }
+    try {
+        const output = run(cmd).toString();
+        console.log(`\nUsing zip utility: ${output}\n`);
+        return true;
+    } catch {
+        console.error("\nNo zip utility found! Install 7zip if on windows or zip if on linux\n");
+        return false;
     }
 }
