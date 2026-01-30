@@ -1,0 +1,20 @@
+{
+  "name": "extension-builder",
+  "version": "0.1.0",
+  "description": "A basic extension builder for my extensions",
+  "homepage": "https://github.com/usyless/extension-builder#readme",
+  "bugs": {
+    "url": "https://github.com/usyless/extension-builder/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usyless/extension-builder.git"
+  },
+  "license": "MIT",
+  "author": "usy",
+  "type": "module",
+  "bin": {
+    "build": "./scripts/build.js",
+    "swap-manifests": "./scripts/swap-manifests.js"
+  }
+}
