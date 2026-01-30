@@ -87,7 +87,7 @@ export function checkZipExists() {
         cmd = 'zip --version';
     }
     try {
-        const output = run(cmd).toString();
+        const output = run(cmd, {stdio: 'pipe'}).toString();
         console.log(`\nUsing zip utility: ${output}\n`);
         return true;
     } catch {
