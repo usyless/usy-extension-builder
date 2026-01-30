@@ -41,14 +41,14 @@ export function isChromeManifest() {
     return fs_sync.existsSync(firefox_manifest);
 }
 
-export function swapManifests() {
+export async function swapManifests() {
     if (isFirefoxManifest()) { // make chrome
-        fs_sync.renameSync(main_manifest, firefox_manifest);
-        fs_sync.renameSync(chrome_manifest, main_manifest);
+        await fs.rename(main_manifest, firefox_manifest);
+        await fs.rename(chrome_manifest, main_manifest);
         console.log('Switched to Chrome manifest');
     } else if (isChromeManifest()) { // make firefox
-        fs_sync.renameSync(main_manifest, chrome_manifest);
-        fs_sync.renameSync(firefox_manifest, main_manifest);
+        await fs.rename(main_manifest, chrome_manifest);
+        await fs.rename(firefox_manifest, main_manifest);
         console.log('Switched to Firefox manifest');
     } else {
         console.error('No alternate manifest files found.');
@@ -73,7 +73,7 @@ export async function makeZip(output, directory) {
     if (process.platform === "win32") { // use 7z
         cmd = `7z a ${output} .`;
     } else { // use zip
-        if (fs_sync.existsSync(output)) fs_sync.unlinkSync(output);
+        if (fs_sync.existsSync(output)) await fs.unlink(output);
         cmd = `zip -r ${output} .`;
     }
     run(cmd,{ cwd: directory });

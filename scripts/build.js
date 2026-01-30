@@ -57,7 +57,7 @@ await (async () => {
 
     // make it firefox
     if (!common.isFirefoxManifest()) {
-        common.swapManifests();
+        await common.swapManifests();
     }
 
     console.log(`Version: ${pkg.version}`);

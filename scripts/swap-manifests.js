@@ -2,4 +2,4 @@
 
 import { swapManifests } from "./common.js";
 
-swapManifests();
+await swapManifests();
