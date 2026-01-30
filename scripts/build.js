@@ -9,6 +9,11 @@ const platforms = {
     chromium: "chromium"
 }
 
+if (!fs_sync.existsSync(common.MANIFEST)) {
+    console.error('Unable to find manifest file!');
+    process.exit(1);
+}
+
 const pkg = JSON.parse(
     await fs.readFile(common.MANIFEST, "utf8")
 );
