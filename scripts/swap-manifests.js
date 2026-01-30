@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import { swapManifests } from "./build.js";
+import { swapManifests } from "./common.js";
 
 swapManifests();
