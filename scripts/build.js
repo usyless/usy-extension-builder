@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "node:fs/promises";
+import fs_sync from "node:fs";
 import * as common from './common.js';
 
 const platforms = {
@@ -45,6 +46,10 @@ async function makeReleaseFor(platform) {
 
 await (async () => {
     if (!common.checkZipExists()) return;
+    if (!fs_sync.existsSync(common.SRC_DIR)) {
+        console.error('No source directory found at', common.SRC_DIR);
+        return;
+    }
 
     await common.mkdir(common.RELEASES_DIR);
 
